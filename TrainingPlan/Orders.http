@@ -1,0 +1,12 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@baseUrl = https://localhost:7199/
+POST {{baseUrl}}api/orders/1/approve?simulateFailure=false
+
+#### Integrated Approve
+POST {{baseUrl}}api/orders/1/integrated-approve?simulateFailure=false
+
+### Simulate Failure
+POST {{baseUrl}}api/orders/2/approve?simulateFailure=true
+
+### # Integrated Approve (Simulated Failure)
+POST {{baseUrl}}api/orders/2/integrated-approve?simulateFailure=true
