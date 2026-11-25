@@ -6,9 +6,9 @@ namespace TrainingPlan.Controllers
     [Route("api/membership-renewal")]
     public class MembershipRenewalController : ControllerBase
     {
-        private readonly MembershipLookupCache _lookupCache;
+        private readonly MembershipLookupService _lookupCache;
 
-        public MembershipRenewalController(MembershipLookupCache lookupCache)
+        public MembershipRenewalController(MembershipLookupService lookupCache)
         {
             _lookupCache = lookupCache;
         }

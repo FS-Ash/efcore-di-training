@@ -15,35 +15,25 @@ namespace TrainingPlan.Controllers
             _logger = logger;
         }
 
+
         [HttpPost("{orderId:int}/approve")]
-        [HttpPost("{orderId:int}/integrated-approve")]
         public async Task<IActionResult> ApproveOrder(int orderId)
         {
-            var correlationId = HttpContext.TraceIdentifier;
+            _logger.LogInformation(
+                "Order approval requested. OrderId: {OrderId}",
+                orderId);
 
-            using var logScope = _logger.BeginScope(new Dictionary<string, object>
+            await _orderApprovalService.ApproveOrderAsync(orderId);
+
+            _logger.LogInformation(
+                "Order approval completed. OrderId: {OrderId}",
+                orderId);
+
+            return Ok(new
             {
-                ["CorrelationId"] = correlationId
+                orderId = orderId,
+                Status = "Approved"
             });
-            _logger.LogInformation("Order approval requested. CorrelationId: {CorrelationId}, OrderId: {OrderId}",correlationId,orderId);
-
-            try
-            {
-                await _orderApprovalService.ApprovedOrderAsync(orderId);
-
-                _logger.LogInformation("Order approval completed. CorrelationId: {CorrelationId}, OrderId: {OrderId}", correlationId, orderId);
-                
-                return Ok(new
-                {
-                    orderId = orderId,
-                    Status = "Approved"
-                });
-            }catch (Exception ex)
-            {
-                _logger.LogError(ex, "Order approval failed. CorrelationId: {CorrelationId}, OrderId: {OrderId}", correlationId, orderId);
-
-                throw;
-            }
         }
     }
 }

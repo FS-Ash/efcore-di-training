@@ -2,17 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TrainingPlan.Data;
+using TrainingPlan.Tests.Infrastructure;
 
 namespace TrainingPlan.Tests
 {
-    public class DbContextScopeTests
+    public class AppDbContextIntegrationTest
     {
         [Fact]
         public void DbContext_ShouldBeScoped()
         {
-            using var factory = new WebApplicationFactory<Program>();
+            using var factory = new SqliteWebApplicationFactory();
 
-            
+
             using var scope1 = factory.Services.CreateScope();
             using var scope2 = factory.Services.CreateScope();
 

@@ -12,8 +12,8 @@ using TrainingPlan.Data;
 namespace TrainingPlan.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261110061733_AddOrdersAndAuditLogs")]
-    partial class AddOrdersAndAuditLogs
+    [Migration("20261125105305_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,6 +54,7 @@ namespace TrainingPlan.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
                     b.Property<string>("Status")
+                        .IsConcurrencyToken()
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
