@@ -17,7 +17,7 @@ public class Day5IntegrationTests
     [InlineData(false)]
     [InlineData(true)]
     public async Task IntegratedApproval_ShouldHandleCommitAndRollback(
-        bool simulateFailure)
+        bool shouldFail)
     {
         using var connection = new SqliteConnection("DataSource=:memory:");
         await connection.OpenAsync();
@@ -33,7 +33,13 @@ public class Day5IntegrationTests
                         Microsoft.EntityFrameworkCore.Infrastructure.IDbContextOptionsConfiguration<AppDbContext>>();
 
                     services.AddDbContext<AppDbContext>(options =>
-                        options.UseSqlite(connection));
+                    {
+                        options.UseSqlite(connection);
+                        if (shouldFail)
+                        {
+                            options.AddInterceptors(new FailOnAuditInsert());
+                        }
+                    });
 
                 });
             });
@@ -51,7 +57,7 @@ public class Day5IntegrationTests
         using var client = factory.CreateClient();
 
         var response = await client.PostAsync(
-            $"/api/orders/1/integrated-approve?simulateFailure={simulateFailure.ToString().ToLowerInvariant()}",
+            $"/api/orders/1/approve",
             null);
 
         // Verify database state using a fresh DbContext.
@@ -61,7 +67,7 @@ public class Day5IntegrationTests
         var order = await verifyDb.Orders.SingleAsync();
         var auditCount = await verifyDb.OrderAuditLogs.CountAsync();
 
-        if (simulateFailure)
+        if (shouldFail)
         {
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
             Assert.Equal("Pending", order.Status);

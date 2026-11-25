@@ -17,7 +17,7 @@ namespace TrainingPlan.Controllers
 
         [HttpPost("{orderId:int}/approve")]
         [HttpPost("{orderId:int}/integrated-approve")]
-        public async Task<IActionResult> ApproveOrder(int orderId, [FromQuery] bool simulateFailure = false)
+        public async Task<IActionResult> ApproveOrder(int orderId)
         {
             var correlationId = HttpContext.TraceIdentifier;
 
@@ -29,7 +29,7 @@ namespace TrainingPlan.Controllers
 
             try
             {
-                await _orderApprovalService.ApprovedOrderAsync(orderId, simulateFailure);
+                await _orderApprovalService.ApprovedOrderAsync(orderId);
 
                 _logger.LogInformation("Order approval completed. CorrelationId: {CorrelationId}, OrderId: {OrderId}", correlationId, orderId);
                 

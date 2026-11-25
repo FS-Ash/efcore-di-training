@@ -15,7 +15,7 @@ namespace TrainingPlan.Services
             _logger = logger;
         }
 
-        public async Task ApprovedOrderAsync(int orderId, bool simulateFailure = false)
+        public async Task ApprovedOrderAsync(int orderId)
         {
 
             var order = await _db.Orders.FirstOrDefaultAsync(o => o.OrderId ==orderId);
@@ -32,11 +32,6 @@ namespace TrainingPlan.Services
 
                 order.Status = "Approved";
                 await _db.SaveChangesAsync();
-
-                if (simulateFailure)
-                {
-                    throw new Exception("Simulated failure after order approval.");
-                }
 
                 var auditLog = new OrderAuditLog
                 {

@@ -52,6 +52,7 @@ namespace TrainingPlan.Tests
 
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseSqlite(connection)
+                .AddInterceptors(new FailOnAuditInsert())
                 .Options;
 
             int orderId;
@@ -73,8 +74,8 @@ namespace TrainingPlan.Tests
             {
                 var service = new OrderApprovalService(actDb, NullLogger<OrderApprovalService>.Instance);
 
-                await Assert.ThrowsAsync<Exception>(
-                    () => service.ApprovedOrderAsync(orderId, simulateFailure: true));
+                await Assert.ThrowsAsync<DbUpdateException>(
+                    () => service.ApprovedOrderAsync(orderId));
             }
 
             await using (var verifyDb = new AppDbContext(options))
