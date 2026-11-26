@@ -1,0 +1,17 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@baseUrl = https://localhost:7199/
+
+### Approve a nonexistent order
+POST {{baseUrl}}api/orders/999999/approve
+Accept: application/problem+json
+
+### Test supplied correlation ID
+POST {{baseUrl}}api/orders/1/approve
+X-Correlation-ID: training-test-001
+
+### Test generated correlation ID
+POST {{baseUrl}}api/orders/1/approve
+
+### Test correlation ID on error response
+POST {{baseUrl}}api/orders/999999/approve
+X-Correlation-ID: training-error-001
