@@ -55,7 +55,7 @@ namespace TrainingPlan.Tests
 
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseSqlite(connection)
-                .AddInterceptors(new FailOnAuditInsert())
+                .AddInterceptors(new FailBeforeTransactionCommit())
                 .Options;
 
             int orderId;

@@ -43,17 +43,6 @@ namespace TrainingPlan.Services
 
                 order.Status = "Approved";
 
-                // Two separate saves are intentional for the Day 5
-                // transaction exercise. The first persists the order
-                // update within the transaction, allowing an audit
-                // insertion failure to demonstrate rollback of an
-                // already-executed database operation.
-                //
-                // In production, these changes would normally be
-                // persisted using a single SaveChangesAsync() call.
-
-                await _db.SaveChangesAsync();
-
                 var auditLog = new OrderAuditLog
                 {
                     OrderId = order.OrderId,

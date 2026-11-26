@@ -40,7 +40,7 @@ public class SqliteWebApplicationFactory
                 if (_shouldFail)
                 {
                     options.AddInterceptors(
-                        new FailOnAuditInsert());
+                        new FailBeforeTransactionCommit());
                 }
             });
         });
